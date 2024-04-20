@@ -8,7 +8,10 @@
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
 }
+.item:hover {
+    background-color: var(--theme-accent-1);
+}
 
 .selected {
-    background-color: lavender;
+    background-color: var(--theme-accent-3);
 }

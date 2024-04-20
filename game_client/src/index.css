@@ -1,4 +1,35 @@
+@property --theme-primary {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #735ea6;
+}
+@property --theme-secondary {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #5f4c89;
+}
+@property --theme-accent1 {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #886c9f;
+}
+@property --theme-accent2 {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #b099d1;
+}
+@property --theme-accent-3 {
+    syntax: "<color>";
+    inherits: false;
+    initial-value: #6d4d89;
+}
 :root {
+    --theme-primary: #735ea6;
+    --theme-secondary: #5f4c89;
+    --theme-accent-1: #886c9f;
+    --theme-accent-2: #b099d1;
+    --theme-accent-3: #6d4d89;
+
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
     font-weight: 400;
