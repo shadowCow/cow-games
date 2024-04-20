@@ -77,7 +77,7 @@ button {
     transition: border-color 0.25s;
 }
 button:hover {
-    border-color: lavender;
+    border-color: var(--theme-accent-1);
 }
 /* button:focus,
 button:focus-visible {
