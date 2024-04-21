@@ -1,26 +1,36 @@
 import { useState } from 'react';
-import { ColumnLayout } from '../../component_lib/column_layout/column_layout';
 import { assertNever } from '@cow-sunday/fp-ts';
 import { CreateGameView } from '../CreateGameView/CreateGameView';
 import { JoinGameView } from '../JoinGameView/JoinGameView';
 import './LobbyView.css';
+import { combineClasses } from '../../util/css';
+import { ActiveSessionsView } from '../ActiveSessionsView/ActiveSessionsView';
 
 export function LobbyView(props: {}): JSX.Element {
-    const [createOrJoin, setCreateOrJoin] = useState<CreateOrJoin>('join');
+    const [createOrJoin, setCreateOrJoin] = useState<NavOption>('join');
 
     return (
-        <ColumnLayout>
-            <Nav selected={createOrJoin} onSelect={setCreateOrJoin} />
-            <MainArea createOrJoin={createOrJoin} />
-        </ColumnLayout>
+        <Layout
+            nav={<Nav selected={createOrJoin} onSelect={setCreateOrJoin} />}
+            main={<MainArea createOrJoin={createOrJoin} />}
+        />
+    );
+}
+
+function Layout(props: { nav: JSX.Element; main: JSX.Element }): JSX.Element {
+    return (
+        <div className="layout">
+            {props.nav}
+            {props.main}
+        </div>
     );
 }
 
 function Nav(props: {
-    selected: CreateOrJoin;
-    onSelect: (choice: CreateOrJoin) => void;
+    selected: NavOption;
+    onSelect: (choice: NavOption) => void;
 }): JSX.Element {
-    const getSelectedClass = (option: CreateOrJoin, selected: CreateOrJoin) => {
+    const getSelectedClass = (option: NavOption, selected: NavOption) => {
         if (option === selected) {
             return 'selected-nav-item';
         } else {
@@ -28,15 +38,30 @@ function Nav(props: {
         }
     };
     return (
-        <div>
+        <div className="nav">
             <button
-                className={getSelectedClass('join', props.selected)}
+                className={combineClasses(
+                    'nav-item',
+                    getSelectedClass('active_sessions', props.selected),
+                )}
+                onClick={() => props.onSelect('active_sessions')}
+            >
+                Active
+            </button>
+            <button
+                className={combineClasses(
+                    'nav-item',
+                    getSelectedClass('join', props.selected),
+                )}
                 onClick={() => props.onSelect('join')}
             >
                 Join
             </button>
             <button
-                className={getSelectedClass('create', props.selected)}
+                className={combineClasses(
+                    'nav-item',
+                    getSelectedClass('create', props.selected),
+                )}
                 onClick={() => props.onSelect('create')}
             >
                 Create
@@ -45,15 +70,17 @@ function Nav(props: {
     );
 }
 
-function MainArea(props: { createOrJoin: CreateOrJoin }): JSX.Element {
+function MainArea(props: { createOrJoin: NavOption }): JSX.Element {
     switch (props.createOrJoin) {
         case 'create':
             return <CreateGameView />;
         case 'join':
             return <JoinGameView />;
+        case 'active_sessions':
+            return <ActiveSessionsView />;
         default:
             return assertNever(props.createOrJoin);
     }
 }
 
-type CreateOrJoin = 'create' | 'join';
+type NavOption = 'create' | 'join' | 'active_sessions';
