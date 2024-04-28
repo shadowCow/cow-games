@@ -7,12 +7,12 @@ import { combineClasses } from '../../util/css';
 import { ActiveSessionsView } from '../ActiveSessionsView/ActiveSessionsView';
 
 export function LobbyView(props: {}): JSX.Element {
-    const [createOrJoin, setCreateOrJoin] = useState<NavOption>('join');
+    const [navOption, setNavOption] = useState<NavOption>('join');
 
     return (
         <Layout
-            nav={<Nav selected={createOrJoin} onSelect={setCreateOrJoin} />}
-            main={<MainArea createOrJoin={createOrJoin} />}
+            nav={<Nav selected={navOption} onSelect={setNavOption} />}
+            main={<MainArea navOption={navOption} />}
         />
     );
 }
@@ -70,8 +70,8 @@ function Nav(props: {
     );
 }
 
-function MainArea(props: { createOrJoin: NavOption }): JSX.Element {
-    switch (props.createOrJoin) {
+function MainArea(props: { navOption: NavOption }): JSX.Element {
+    switch (props.navOption) {
         case 'create':
             return <CreateGameView />;
         case 'join':
@@ -79,7 +79,7 @@ function MainArea(props: { createOrJoin: NavOption }): JSX.Element {
         case 'active_sessions':
             return <ActiveSessionsView />;
         default:
-            return assertNever(props.createOrJoin);
+            return assertNever(props.navOption);
     }
 }
 
