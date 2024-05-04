@@ -1,8 +1,10 @@
 import { combineClasses } from '../../util/css';
-import './GameSessionView.css';
+import classes from './GameSessionView.module.css';
 import { useEffect, useRef } from 'react';
 
-export function GameSessionView(props: {}): JSX.Element {
+export function GameSessionView(props: {
+    exitGameSessionView: () => void;
+}): JSX.Element {
     const players = ['bill', 'jane', 'phil'];
 
     // TODO - move this out to be injected by particular game.
@@ -13,8 +15,12 @@ export function GameSessionView(props: {}): JSX.Element {
         ctx.stroke();
     };
     return (
-        <div className="layout">
-            <PlayerList players={players} playerTurn={1} />
+        <div className={classes.layout}>
+            <PlayerList
+                players={players}
+                playerTurn={1}
+                exitGameSessionView={props.exitGameSessionView}
+            />
             <GameSurface gameRenderer={gameRenderer} />
         </div>
     );
@@ -23,9 +29,11 @@ export function GameSessionView(props: {}): JSX.Element {
 function PlayerList(props: {
     players: Array<string>;
     playerTurn: number;
+    exitGameSessionView: () => void;
 }): JSX.Element {
     return (
-        <div className="player-list">
+        <div className={classes.playerList}>
+            <button onClick={(e) => props.exitGameSessionView()}>Back</button>
             {props.players.map((p, i) => (
                 <PlayerBadge
                     key={p}
@@ -43,10 +51,10 @@ function PlayerBadge(props: {
     playerIndex: number;
     isTurn: boolean;
 }): JSX.Element {
-    const isTurnClass = props.isTurn ? 'player-turn' : undefined;
+    const isTurnClass = props.isTurn ? classes.playerTurn : undefined;
     return (
         <p
-            className={combineClasses('player-badge', isTurnClass)}
+            className={combineClasses(classes.playerBadge, isTurnClass)}
             title={props.playerId}
         >
             {props.playerIndex}
@@ -75,7 +83,7 @@ function GameSurface(props: {
     }, []);
 
     return (
-        <div className="game-surface">
+        <div className={classes.gameSurface}>
             <canvas ref={canvasRef} id="game-surface"></canvas>
         </div>
     );

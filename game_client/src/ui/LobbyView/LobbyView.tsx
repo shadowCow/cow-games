@@ -2,24 +2,31 @@ import { useState } from 'react';
 import { assertNever } from '@cow-sunday/fp-ts';
 import { CreateGameView } from '../CreateGameView/CreateGameView';
 import { JoinGameView } from '../JoinGameView/JoinGameView';
-import './LobbyView.css';
+import classes from './LobbyView.module.css';
 import { combineClasses } from '../../util/css';
 import { ActiveSessionsView } from '../ActiveSessionsView/ActiveSessionsView';
 
-export function LobbyView(props: {}): JSX.Element {
+export function LobbyView(props: {
+    enterActiveSession: (sessionId: string) => void;
+}): JSX.Element {
     const [navOption, setNavOption] = useState<NavOption>('join');
 
     return (
         <Layout
             nav={<Nav selected={navOption} onSelect={setNavOption} />}
-            main={<MainArea navOption={navOption} />}
+            main={
+                <MainArea
+                    navOption={navOption}
+                    enterActiveSession={props.enterActiveSession}
+                />
+            }
         />
     );
 }
 
 function Layout(props: { nav: JSX.Element; main: JSX.Element }): JSX.Element {
     return (
-        <div className="layout">
+        <div className={classes.layout}>
             {props.nav}
             {props.main}
         </div>
@@ -32,16 +39,16 @@ function Nav(props: {
 }): JSX.Element {
     const getSelectedClass = (option: NavOption, selected: NavOption) => {
         if (option === selected) {
-            return 'selected-nav-item';
+            return classes.selectedNavItem;
         } else {
             return undefined;
         }
     };
     return (
-        <div className="nav">
+        <div className={classes.nav}>
             <button
                 className={combineClasses(
-                    'nav-item',
+                    classes.navItem,
                     getSelectedClass('active_sessions', props.selected),
                 )}
                 onClick={() => props.onSelect('active_sessions')}
@@ -50,7 +57,7 @@ function Nav(props: {
             </button>
             <button
                 className={combineClasses(
-                    'nav-item',
+                    classes.navItem,
                     getSelectedClass('join', props.selected),
                 )}
                 onClick={() => props.onSelect('join')}
@@ -59,7 +66,7 @@ function Nav(props: {
             </button>
             <button
                 className={combineClasses(
-                    'nav-item',
+                    classes.navItem,
                     getSelectedClass('create', props.selected),
                 )}
                 onClick={() => props.onSelect('create')}
@@ -70,14 +77,23 @@ function Nav(props: {
     );
 }
 
-function MainArea(props: { navOption: NavOption }): JSX.Element {
+function MainArea(props: {
+    navOption: NavOption;
+    enterActiveSession: (sessionId: string) => void;
+}): JSX.Element {
     switch (props.navOption) {
         case 'create':
-            return <CreateGameView />;
+            return (
+                <CreateGameView onSessionCreated={props.enterActiveSession} />
+            );
         case 'join':
             return <JoinGameView />;
         case 'active_sessions':
-            return <ActiveSessionsView />;
+            return (
+                <ActiveSessionsView
+                    enterActiveSession={props.enterActiveSession}
+                />
+            );
         default:
             return assertNever(props.navOption);
     }

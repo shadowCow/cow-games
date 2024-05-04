@@ -1,6 +1,6 @@
 import { combineClasses } from '../../util/css';
 import { WithId } from '../../util/with_id';
-import './list.css';
+import classes from './list.module.css';
 
 export function List<T extends WithId>(props: {
     items: Array<T>;
@@ -9,13 +9,13 @@ export function List<T extends WithId>(props: {
     renderer?: ListItemRenderer<T>;
 }): JSX.Element {
     return (
-        <ul className="list">
+        <ul className={classes.list}>
             {props.items.map((item) => (
                 <li
                     key={item.id}
                     onClick={() => props.onSelect(item.id)}
                     className={combineClasses(
-                        'item',
+                        classes.item,
                         getSelectedClass(item.id, props.selectedItemId),
                     )}
                 >
@@ -34,7 +34,7 @@ function getSelectedClass(
     itemId: string,
     selectedItemId: string | undefined,
 ): string | undefined {
-    return selectedItemId === itemId ? 'selected' : undefined;
+    return selectedItemId === itemId ? classes.selected : undefined;
 }
 
 type ListItemRenderer<T extends WithId> = (t: T) => JSX.Element;

@@ -2,7 +2,9 @@ import { useCallback, useState } from 'react';
 import { List } from '../../component_lib/list/list';
 import { ColumnLayout } from '../../component_lib/column_layout/column_layout';
 
-export function CreateGameView(props: {}): JSX.Element {
+export function CreateGameView(props: {
+    onSessionCreated: (sessionId: string) => void;
+}): JSX.Element {
     const games: Array<PlayableGame> = [
         {
             id: 'tic-tac-toe',
@@ -19,7 +21,12 @@ export function CreateGameView(props: {}): JSX.Element {
     ];
     const [selectedGameId, setSelectedGameId] = useState<string>();
     const onCreateCallback = useCallback(() => {
-        console.log('creating', selectedGameId);
+        if (selectedGameId !== undefined) {
+            // TODO make a remote call to create the game...
+
+            // on success... call this
+            props.onSessionCreated('TBD');
+        }
     }, [selectedGameId]);
 
     return (

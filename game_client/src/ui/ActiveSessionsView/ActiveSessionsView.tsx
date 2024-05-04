@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { List } from '../../component_lib/list/list';
 import { WithId } from '../../util/with_id';
-import './ActiveSessionsView.css';
+import classes from './ActiveSessionsView.module.css';
 
-export function ActiveSessionsView(props: {}): JSX.Element {
+export function ActiveSessionsView(props: {
+    enterActiveSession: (sessionId: string) => void;
+}): JSX.Element {
     const sessions: Array<GameSession> = [
         {
             id: 'session1',
@@ -16,7 +18,17 @@ export function ActiveSessionsView(props: {}): JSX.Element {
     ];
     const [selectedSessionId, setSelectedSessionId] = useState<string>();
     return (
-        <div className="layout">
+        <div className={classes.layout}>
+            <button
+                disabled={selectedSessionId === undefined}
+                onClick={(e) => {
+                    if (selectedSessionId !== undefined) {
+                        props.enterActiveSession(selectedSessionId);
+                    }
+                }}
+            >
+                Go to Game
+            </button>
             <List<GameSession>
                 items={sessions}
                 selectedItemId={selectedSessionId}
