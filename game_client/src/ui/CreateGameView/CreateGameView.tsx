@@ -1,10 +1,17 @@
-import { useCallback, useState } from 'react';
+import { Dispatch, useCallback, useState } from 'react';
 import { List } from '../../component_lib/list/list';
 import { ColumnLayout } from '../../component_lib/column_layout/column_layout';
+import {
+    CreateGame,
+    Game,
+    GameCreationAction,
+    RemoteCollectionState,
+} from '@cow-sunday/game-protocol-ts';
 
 export function CreateGameView(props: {
-    onSessionCreated: (sessionId: string) => void;
+    dispatch: Dispatch<GameCreationAction>;
 }): JSX.Element {
+    // TODO - replace this with RemoteCollection<Game>
     const games: Array<PlayableGame> = [
         {
             id: 'tic-tac-toe',
@@ -22,10 +29,7 @@ export function CreateGameView(props: {
     const [selectedGameId, setSelectedGameId] = useState<string>();
     const onCreateCallback = useCallback(() => {
         if (selectedGameId !== undefined) {
-            // TODO make a remote call to create the game...
-
-            // on success... call this
-            props.onSessionCreated('TBD');
+            props.dispatch(CreateGame({ gameId: selectedGameId }));
         }
     }, [selectedGameId]);
 

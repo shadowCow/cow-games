@@ -1,13 +1,19 @@
-import { useState } from 'react';
+import { Dispatch, useState } from 'react';
 import { assertNever } from '@cow-sunday/fp-ts';
 import { CreateGameView } from '../CreateGameView/CreateGameView';
 import { JoinGameView } from '../JoinGameView/JoinGameView';
 import classes from './LobbyView.module.css';
 import { combineClasses } from '../../util/css';
 import { ActiveSessionsView } from '../ActiveSessionsView/ActiveSessionsView';
+import {
+    Game,
+    GameCreationAction,
+    RemoteCollectionState,
+} from '@cow-sunday/game-protocol-ts';
 
 export function LobbyView(props: {
     enterActiveSession: (sessionId: string) => void;
+    createGameDispatch: Dispatch<GameCreationAction>;
 }): JSX.Element {
     const [navOption, setNavOption] = useState<NavOption>('join');
 
@@ -17,6 +23,7 @@ export function LobbyView(props: {
             main={
                 <MainArea
                     navOption={navOption}
+                    createGameDispatch={props.createGameDispatch}
                     enterActiveSession={props.enterActiveSession}
                 />
             }
@@ -79,13 +86,12 @@ function Nav(props: {
 
 function MainArea(props: {
     navOption: NavOption;
+    createGameDispatch: Dispatch<GameCreationAction>;
     enterActiveSession: (sessionId: string) => void;
 }): JSX.Element {
     switch (props.navOption) {
         case 'create':
-            return (
-                <CreateGameView onSessionCreated={props.enterActiveSession} />
-            );
+            return <CreateGameView dispatch={props.createGameDispatch} />;
         case 'join':
             return <JoinGameView />;
         case 'active_sessions':
